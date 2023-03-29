@@ -1,2 +1,2 @@
-# E-Commerce-Website
+# Power Solution Website
 Web Programming Course Project
