@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const sequelize = new Sequelize(
     process.env.DATABASE_NAME, process.env.USER_NAME, process.env.PASSWORD, {
     host: process.env.HOST,
@@ -16,6 +16,7 @@ db.order = require('./ordersModel')(sequelize);
 db.product = require('./productsModel')(sequelize);
 db.cart = require('./cartModel')(sequelize);
 db.feedback = require('./feedbackModel')(sequelize);
+db.Op = Op;
 
 db.user.hasMany(db.order);
 db.product.hasMany(db.order);

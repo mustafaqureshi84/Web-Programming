@@ -52,6 +52,10 @@ let productsModel = (sequelize) => {
                 isNumeric: true,
                 min: 0,
             }
+        },
+        imageurl: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         sequelize,
