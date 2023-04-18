@@ -1,10 +1,8 @@
-const { DataTypes, Model } = require('sequelize');
-
-let cartModel = (sequelize) => {
-    class Cart extends Model { };
+let cartModel = (sequelize, Sequelize) => {
+    class Cart extends Sequelize.Model { };
     Cart.init({
         id: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true

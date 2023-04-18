@@ -1,10 +1,11 @@
-const { DataTypes, Model } = require('sequelize');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-let adminModel = (sequelize) => {
-    class Admin extends Model { };
+let adminModel = (sequelize, Sequelize) => {
+    class Admin extends Sequelize.Model { };
     Admin.init({
         name: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             validate: {
                 min: 5,
@@ -12,7 +13,7 @@ let adminModel = (sequelize) => {
             }
         },
         email: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true,
             validate: {
@@ -20,14 +21,25 @@ let adminModel = (sequelize) => {
             }
         },
         password: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false
         }
     }, {
         sequelize,
         modelName: 'admins',
-        timestamps: false
+        timestamps: false,
+        hooks: {
+            beforeCreate: async (user) => {
+                let salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(user.password, salt);
+            }
+        }
     });
+
+    Admin.prototype.token = function () {
+        return jwt.sign({ emial: this.email, name: this.name }, 'process.env.JWT_SECRET', { expiresIn: 'process.env.JWT_LIFETIME' });
+    }
+
     return Admin;
 };
 

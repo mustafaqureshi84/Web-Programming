@@ -1,16 +1,14 @@
-const { DataTypes, Model } = require('sequelize');
-
-let feedbackModel = (sequelize) => {
-    class Feedback extends Model { };
+let feedbackModel = (sequelize, Sequelize) => {
+    class Feedback extends Sequelize.Model { };
     Feedback.init({
         id: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         feedback: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -20,8 +18,7 @@ let feedbackModel = (sequelize) => {
         }
     }, {
         sequelize,
-        modelName: 'feedbacks',
-        timestamps: false
+        modelName: 'feedbacks'
     });
     return Feedback;
 };

@@ -1,15 +1,13 @@
-const { DataTypes, Model } = require('sequelize');
-
-let productsModel = (sequelize) => {
-    class Product extends Model { };
+let productsModel = (sequelize, Sequelize) => {
+    class Product extends Sequelize.Model { };
     Product.init({
         id: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
         name: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -17,7 +15,7 @@ let productsModel = (sequelize) => {
             }
         },
         brand: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -25,7 +23,7 @@ let productsModel = (sequelize) => {
             }
         },
         price: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -35,7 +33,7 @@ let productsModel = (sequelize) => {
             }
         },
         description: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -44,7 +42,7 @@ let productsModel = (sequelize) => {
             }
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             validate: {
                 notNull: true,
@@ -53,9 +51,9 @@ let productsModel = (sequelize) => {
                 min: 0,
             }
         },
-        imageurl: {
-            type: DataTypes.STRING,
-            allowNull: true
+        imageUrl: {
+            type: Sequelize.STRING,
+            allowNull: false
         }
     }, {
         sequelize,

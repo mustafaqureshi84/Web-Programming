@@ -10,12 +10,12 @@ const db = {};
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.admin = require('./adminModel')(sequelize);
+db.admin = require('./adminModel')(sequelize, Sequelize);
 db.user = require('./userModel')(sequelize, Sequelize);
-db.order = require('./ordersModel')(sequelize);
-db.product = require('./productsModel')(sequelize);
-db.cart = require('./cartModel')(sequelize);
-db.feedback = require('./feedbackModel')(sequelize);
+db.order = require('./ordersModel')(sequelize, Sequelize);
+db.product = require('./productsModel')(sequelize, Sequelize);
+db.cart = require('./cartModel')(sequelize, Sequelize);
+db.feedback = require('./feedbackModel')(sequelize, Sequelize);
 db.Op = Op;
 
 db.user.hasMany(db.order);

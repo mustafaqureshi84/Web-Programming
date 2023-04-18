@@ -1,13 +1,18 @@
 const { Op, product } = require('../models');
+const asyncWrapper = require('../middlewares/asyncWrapper');
+const { createError } = require('../errors/customError');
+const { StatusCodes } = require('http-status-codes');
 
-const viewProducts = async (req, res) => {
+const viewProducts = asyncWrapper(async (req, res, next) => {
     let { page, brand, price, sort, sorder, search } = req.query;
+    if (!page) {
+        return next(createError(StatusCodes.BAD_REQUEST, 'url is not correct'));
+    }
     if (price) {
         priceRange = price.split(',');
     }
     if (sort) {
         sortFilter = sort.split(',');
-
     }
     let products = await product.findAll({
         where: {
@@ -18,23 +23,28 @@ const viewProducts = async (req, res) => {
         order: sort ? sortFilter.map((attri) => [attri, sorder]) : null,
         limit: 5, offset: (Number(page) - 1) * 5
     });
-    res.status(200).json({ length: products.length, products });
-};
+    let total = await product.count();
+    res.status(StatusCodes.OK).json({ count: total, length: products.length, products });
+});
 
-const addProducts = (req, res) => {
-    res.send("Add Products Page");
-};
+const getSingleProduct = asyncWrapper(async (req, res, next) => {
+    let prod = await product.findOne({ where: { id: Number(req.params.id) } });
+    res.status(StatusCodes.OK).json(prod);
+});
 
-const updateProducts = (req, res) => {
-    res.send("Update Products Page");
-};
+const addProducts = asyncWrapper(async (req, res, next) => {
+    let prod = await product.create(req.body);
+    res.status(StatusCodes.CREATED).json(prod);
+});
 
-const removeProducts = (req, res) => {
-    res.send("Remove Products Page");
-};
+const updateProducts = asyncWrapper(async (req, res, next) => {
+    let prod = await product.update(req.body, { where: { id: Number(req.params.id) } });
+    res.status(StatusCodes.OK).json(prod);
+});
 
-const getSingleProduct = (req, res) => {
-    res.send('<h1>User single Page</h1>');
-};
+const removeProducts = asyncWrapper(async (req, res, next) => {
+    let prod = await product.destroy({ where: { id: Number(req.params.id) } });
+    res.status(StatusCodes.OK).json(prod);
+});
 
 module.exports = { viewProducts, addProducts, updateProducts, removeProducts, getSingleProduct };

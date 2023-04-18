@@ -1,13 +1,22 @@
-const login = (req, res) => {
-    res.send("admin Login Page");
-};
+const { admin } = require('../models');
+const { StatusCodes } = require('http-status-codes');
+const asyncWrapper = require('../middlewares/asyncWrapper');
 
-const dashboard = (req, res) => {
-    res.send("admin Dashboard Page");
-};
+let viewAdmins = asyncWrapper(async (req, res, next) => {
+    let users = await admin.findAll();
+    let total = await admin.count();
+    res.status(StatusCodes.OK).json({ count: total, users });
+});
 
-const addAdmin = (req, res) => {
-    res.send("Add Admin user");
-};
+const login = asyncWrapper(async (req, res, next) => {
+    let user = await admin.findOne(req.body);
+    let token = user.token();
+    res.status(StatusCodes.OK).json({ user, token });
+});
 
-module.exports = { login, dashboard, addAdmin };
+const addAdmin = asyncWrapper(async (req, res, next) => {
+    let user = await admin.create(req.body);
+    res.status(StatusCodes.CREATED).json(user);
+});
+
+module.exports = { viewAdmins, login, addAdmin };
